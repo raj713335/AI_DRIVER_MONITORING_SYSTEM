@@ -47,7 +47,7 @@ predictor = dlib.shape_predictor('haarcascades/shape_predictor_68_face_landmarks
 video_capture = cv2.VideoCapture(0)
 
 #Give some time for camera to initialize(not required)
-time.sleep(2)
+time.sleep(1)
 
 while(True):
     #Read each frame and flip it, and convert to grayscale
