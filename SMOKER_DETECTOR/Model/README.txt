@@ -1,0 +1,1 @@
+Please Download yolov3 model from the link : https://pjreddie.com/media/files/yolov3.weights
