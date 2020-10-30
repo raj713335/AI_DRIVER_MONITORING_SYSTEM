@@ -44,13 +44,15 @@ predictor = dlib.shape_predictor('haarcascades/shape_predictor_68_face_landmarks
 #Start webcam video capture
 video_capture = cv2.VideoCapture(0)
 
-#Give some time for camera to initialize(not required)
-time.sleep(1)
+
+
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 while(True):
     #Read each frame and flip it, and convert to grayscale
     ret, frame = video_capture.read()
     frame = cv2.flip(frame,1)
+    (H, W) = frame.shape[:2]
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     #Detect facial points through detector function
@@ -96,8 +98,41 @@ while(True):
             pygame.mixer.music.stop()
             COUNTER = 0
 
+    cv2.putText(frame, "INTELEGIX (Driver Monitoring System)", (80, 40),
+                font, 0.7, (255, 255, 255), 2)
+    cv2.rectangle(frame, (20, 50), (H + 140, 15), (255, 255, 255), 2)
+    # cv2.putText(img, "RISK ANALYSIS", (30, 85),
+    #             font, 0.5, (255, 255, 0), 1)
+    # cv2.putText(img, "-- GREEN : SAFE", (H-100, 85),
+    #             font, 0.5, (0, 255, 0), 1)
+    # cv2.putText(img, "-- RED: UNSAFE", (H-200, 85),
+    #             font, 0.5, (0, 0, 255), 1)
+
+    tot_str = "Head Position : " + str(0)
+    high_str = "Mouth Open : " + str(0)
+    low_str = "Mobile Phone Detected : " + str(0)
+    safe_str = "Total Persons: " + str(0)
+
+    sub_img = frame[H - 100: H, 0:260]
+    black_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
+
+    res = cv2.addWeighted(sub_img, 0.8, black_rect, 0.2, 1.0)
+
+    frame[H - 100:H, 0:260] = res
+
+    cv2.putText(frame, tot_str, (10, H - 80),
+                font, 0.5, (255, 255, 255), 1)
+    cv2.putText(frame, high_str, (10, H - 55),
+                font, 0.5, (0, 255, 0), 1)
+    cv2.putText(frame, low_str, (10, H - 30),
+                font, 0.5, (0, 120, 255), 1)
+    cv2.putText(frame, safe_str, (10, H - 5),
+                font, 0.5, (0, 0, 150), 1)
+
     #Show video feed
-    cv2.imshow('Video', frame)
+    cv2.namedWindow("Output", cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty("Output", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cv2.imshow("Output", frame)
     if(cv2.waitKey(1) & 0xFF == ord('q')):
         break
 
