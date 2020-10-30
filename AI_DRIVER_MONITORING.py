@@ -33,7 +33,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet):
     # grab the dimensions of the frame and then construct a blob
     # from it
     (h, w) = frame.shape[:2]
-    blob = cv2.dnn.blobFromImage(frame, 1.0, (1200, 680),
+    blob = cv2.dnn.blobFromImage(frame, 1.0, (224, 224),
                                  (104.0, 177.0, 123.0))
     # pass the blob through the network and obtain the face detections
     faceNet.setInput(blob)
@@ -103,10 +103,16 @@ predictor = dlib.shape_predictor('haarcascades/shape_predictor_68_face_landmarks
 
 base_dir = os.getcwd()
 base_dir = base_dir.replace('\\', '/')
-model_store_dir = base_dir + '/Model/mask_detector.model'
+model_store_dir = base_dir + '/SMOKER_DETECTOR/Model/smoking_detector.model'
+
+face_detector_caffe = base_dir + '/SMOKER_DETECTOR/face_detector/res10_300x300_ssd_iter_140000.caffemodel'
+prototxtPath = base_dir + '/SMOKER_DETECTOR/face_detector/deploy.prototxt'
+weightsPath = face_detector_caffe
+faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
+maskNet = load_model(model_store_dir)
 
 #Start webcam video capture
-video_capture = cv2.VideoCapture(0)
+video_capture = cv2.VideoCapture('sample.mp4')
 
 
 
@@ -161,6 +167,30 @@ while(True):
         else:
             pygame.mixer.music.stop()
             COUNTER = 0
+
+    (locs, preds) = detect_and_predict_mask(frame, faceNet, maskNet)
+
+    # loop over the detected face locations and their corresponding
+    # locations
+    for (box, pred) in zip(locs, preds):
+        # unpack the bounding box and predictions
+        (startX, startY, endX, endY) = box
+        (mask, withoutMask) = pred
+        print("mask", mask, withoutMask)
+        # determine the class label and color we'll use to draw
+        # the bounding box and text
+        label = "Not Smoking" if mask > (withoutMask + 0.90) else "Smoking"
+        color = (0, 0, 255) if label == "Mask" else (0, 0, 255)
+        # include the probability in the label
+        label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+        # display the label and bounding box rectangle on the output
+        # frame
+        cv2.putText(frame, label, (startX, startY - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+        cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
+
+
+
 
     cv2.putText(frame, "INTELEGIX (Driver Monitoring System)", (80, 40),
                 font, 0.7, (255, 255, 255), 2)
