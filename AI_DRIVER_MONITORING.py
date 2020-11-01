@@ -119,6 +119,8 @@ video_capture = cv2.VideoCapture(0)
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
+drowsey_level="False"
+
 while(True):
     #Read each frame and flip it, and convert to grayscale
     ret, frame = video_capture.read()
@@ -130,11 +132,11 @@ while(True):
     faces = detector(gray, 0)
 
     #Detect faces through haarcascade_frontalface_default.xml
-    face_rectangle = face_cascade.detectMultiScale(gray, 1.3, 5)
+    #face_rectangle = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     #Draw rectangle around each face detected
-    for (x,y,w,h) in face_rectangle:
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+    # for (x,y,w,h) in face_rectangle:
+    #     cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
 
     #Detect facial points
     for face in faces:
@@ -164,7 +166,8 @@ while(True):
             #If no. of frames is greater than threshold frames,
             if COUNTER >= EYE_ASPECT_RATIO_CONSEC_FRAMES:
                 pygame.mixer.music.play(-1)
-                cv2.putText(frame, "You are Drowsy", (150,200), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,0,255), 2)
+                cv2.putText(frame, "You are Drowsy", (150,250), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,0,255), 2)
+                drowsey_level="True"
         else:
             pygame.mixer.music.stop()
             COUNTER = 0
@@ -181,7 +184,7 @@ while(True):
         # determine the class label and color we'll use to draw
         # the bounding box and text
         label = "Not Smoking" if not_smoking > (smoking-0.10) else "Smoking"
-        color = (0, 0, 255) if label == "Mask" else (0, 0, 255)
+        color = (0, 255, 0) if label == "Not Smoking" else (0, 0, 255)
         # include the probability in the label
         label = "{}: {:.2f}%".format(label, max(not_smoking, smoking) * 100)
         # display the label and bounding box rectangle on the output
@@ -203,10 +206,12 @@ while(True):
     # cv2.putText(img, "-- RED: UNSAFE", (H-200, 85),
     #             font, 0.5, (0, 0, 255), 1)
 
-    tot_str = "Head Position : " + str(0)
+    tot_str = "Drowsy : " + str(drowsey_level)
     high_str = "Mouth Open : " + str(0)
     low_str = "Mobile Phone Detected : " + str(0)
     safe_str = "Total Persons: " + str(0)
+
+    drowsey_level="False"
 
     sub_img = frame[H - 100: H, 0:260]
     black_rect = np.ones(sub_img.shape, dtype=np.uint8) * 0
