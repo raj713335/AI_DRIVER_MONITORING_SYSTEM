@@ -179,7 +179,7 @@ while(True):
         print("mask", not_smoking, smoking)
         # determine the class label and color we'll use to draw
         # the bounding box and text
-        label = "Not Smoking" if not_smoking > (smoking) else "Smoking"
+        label = "Not Smoking" if not_smoking > (smoking-0.10) else "Smoking"
         color = (0, 0, 255) if label == "Mask" else (0, 0, 255)
         # include the probability in the label
         label = "{}: {:.2f}%".format(label, max(not_smoking, smoking) * 100)
@@ -192,7 +192,7 @@ while(True):
 
 
 
-    cv2.putText(frame, "INTELEGIX (Driver Monitoring System)", (80, 40),
+    cv2.putText(frame, "INTELEGIX (Driver Monitoring System)", (110, 40),
                 font, 0.7, (255, 255, 255), 2)
     cv2.rectangle(frame, (20, 50), (H + 140, 15), (255, 255, 255), 2)
     # cv2.putText(img, "RISK ANALYSIS", (30, 85),
