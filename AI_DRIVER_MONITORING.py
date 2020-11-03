@@ -118,7 +118,7 @@ faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 maskNet = load_model(model_store_dir)
 
 #Start webcam video capture
-video_capture = cv2.VideoCapture('Driving.mp4')
+video_capture = cv2.VideoCapture(0)
 
 
 
