@@ -113,7 +113,7 @@ faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 maskNet = load_model(model_store_dir)
 
 #Start webcam video capture
-video_capture = cv2.VideoCapture(0)
+video_capture = cv2.VideoCapture('Driving.mp4')
 
 
 
@@ -183,7 +183,7 @@ while(True):
         print("mask", not_smoking, smoking)
         # determine the class label and color we'll use to draw
         # the bounding box and text
-        label = "Not Smoking" if not_smoking > (smoking-0.10) else "Smoking"
+        label = "Not Smoking" if not_smoking > (smoking-0.20) else "Smoking"
         color = (0, 255, 0) if label == "Not Smoking" else (0, 0, 255)
         # include the probability in the label
         label = "{}: {:.2f}%".format(label, max(not_smoking, smoking) * 100)
@@ -198,7 +198,7 @@ while(True):
 
     cv2.putText(frame, "INTELEGIX (Driver Monitoring System)", (110, 40),
                 font, 0.7, (255, 255, 255), 2)
-    cv2.rectangle(frame, (20, 50), (H + 140, 15), (255, 255, 255), 2)
+    cv2.rectangle(frame, (20, 50), (W-20, 15), (255, 255, 255), 2)
     # cv2.putText(img, "RISK ANALYSIS", (30, 85),
     #             font, 0.5, (255, 255, 0), 1)
     # cv2.putText(img, "-- GREEN : SAFE", (H-100, 85),
