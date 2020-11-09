@@ -87,7 +87,7 @@ face_detector_caffe = base_dir + '/SMOKER_DETECTOR/face_detector/res10_300x300_s
 prototxtPath = base_dir + '/SMOKER_DETECTOR/face_detector/deploy.prototxt'
 weightsPath = face_detector_caffe
 faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
-net=cv2.dnn.readNet("SMOKER_DETECTOR/Model/yolov4.weights","SMOKER_DETECTOR/Model/yolov3.cfg")
+net=cv2.dnn.readNet("SMOKER_DETECTOR/Model/yolov4.weights","SMOKER_DETECTOR/Model/yolov4.cfg")
 
 classes=["Cigarette","Mobile"]
 # maskNet = load_model(model_store_dir)
