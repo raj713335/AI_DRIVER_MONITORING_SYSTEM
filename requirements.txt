@@ -11,4 +11,5 @@ imutils==0.5.3
 scipy==1.5.3
 geocoder==1.38.1
 geolocation-python==0.2.2
+cvlib==0.2.5
 
