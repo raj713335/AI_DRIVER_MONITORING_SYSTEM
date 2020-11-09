@@ -93,7 +93,7 @@ classes=["Cigarette","Mobile"]
 # maskNet = load_model(model_store_dir)
 
 #Start webcam video capture
-video_capture = cv2.VideoCapture('sample.mp4')
+video_capture = cv2.VideoCapture(0)
 
 
 
@@ -171,7 +171,7 @@ while(True):
     low_str = "Mobile Phone Detected : " + str(Mobile)
     safe_str = "Total Persons: " + str(0)
 
-    drowsey_level = "False"
+
     Cigarette="False"
     Mobile="False"
 
@@ -259,7 +259,7 @@ while(True):
     else:
         #image = draw_outputs(img, (boxes, scores, classes, nums), class_names, color=(0, 0, 255))
         cv2.circle(frame, (25, 80), 10, (0, 0, 255), -1)
-        cv2.putText(frame, "Fraud Detected", (50, 85),
+        cv2.putText(frame, "Driver Rules Violation", (50, 85),
                     font, 0.5*2, (0, 0, 255), 2)
 
 
@@ -269,6 +269,8 @@ while(True):
             cv2.imwrite("Fraud.jpg", frame)
             threading.Thread(target=telegram).start()
             telegx = 0
+
+    drowsey_level = "False"
 
     #Show video feed
     cv2.namedWindow("Output", cv2.WINDOW_NORMAL)
